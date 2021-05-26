@@ -1,0 +1,27 @@
+version: "3"
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 172.10.0.0/24
+services:
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      mynetwork:
+        ipv4_address: 172.10.0.7
+  app:
+    image: iptrack-img
+    container_name: iptrack-img
+    build: ./
+    restart: always
+    ports:
+    - "8080:8080"
+    environment:
+      - REDIS_HOST=172.10.0.7
+      - REDIS_PORT=6379
+    networks:
+      mynetwork:
+        ipv4_address: 172.10.0.8
